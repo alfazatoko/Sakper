@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Alfaza Cell - Android</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* RESET & VARIABLES */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root { 
+            --blue: #5d9cec; 
+            --green: #7cc386; 
+            --bg: #f5f7fb; 
+            --text: #333; 
+            --primary: #2b67f6; 
+            --orange: #f39c12; 
+            --red: #e74c3c; 
+            --dark: #34495e; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 0; 
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .container { 
+            max-width: 450px; 
+            margin: auto; 
+            padding: 10px; 
+            padding-bottom: 90px; 
+        }
+
+        /* LOGIN PAGE */
+        #page-login { 
+            position: fixed; 
+            inset: 0; 
+            background: var(--primary); 
+            z-index: 9999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+        }
+        
+        .login-box { 
+            background: white; 
+            padding: 30px 20px; 
+            border-radius: 25px; 
+            width: 100%; 
+            max-width: 320px; 
+            text-align: center; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .login-box select,
+        .login-box input { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-radius: 12px; 
+            border: 1px solid #ddd; 
+            outline: none; 
+            font-weight: bold; 
+            box-sizing: border-box; 
+            font-size: 16px;
+        }
+        
+        .btn-login { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 15px; 
+            border-radius: 12px; 
+            font-weight: bold; 
+            font-size: 16px;
+            cursor: pointer; 
+            transition: opacity 0.2s;
+        }
+        
+        .btn-login:active {
+            opacity: 0.8;
+        }
+
+/* HEADER */
+.header-v14 { 
+    background: white; 
+    padding: 15px 12px; 
+    border-radius: 0 0 25px 25px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    text-align: center; 
+}
+
+.h-col { 
+    flex: 1; 
+    font-size: 11px; 
+    color: #666; 
+}
+
+.h-col-left { 
+    text-align: left; 
+}
+
+.h-col-right { 
+    text-align: right; 
+}
+
+.h-col b { 
+    color: var(--primary); 
+    font-size: 12px; 
+    display: block; 
+}
+
+.toko-name { 
+    color: var(--dark); 
+    font-size: 20px; 
+    font-weight: 800; 
+    display: block;
+    line-height: 1.2;
+}
+
+.tanggal-display { 
+    font-size: 11px; 
+    color: #666; 
+    display: block;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* BERANDA */
+.grid-main-saldo { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 12px; 
+    margin: 15px 0; 
+}
+
+.card-s { 
+    padding: 18px; 
+    border-radius: 20px; 
+    color: white; 
+}
+
+.card-s span { 
+    font-size: 12px; 
+    opacity: 0.9; 
+    display: block; 
+}
+
+.card-s p { 
+    margin: 8px 0 0; 
+    font-size: 18px; 
+    font-weight: bold; 
+}
+
+.bg-blue { 
+    background: linear-gradient(135deg, #5d9cec, #4a89dc); 
+}
+
+.bg-green { 
+    background: linear-gradient(135deg, #7cc386, #62af6d); 
+}
+
+.grid-mini { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 10px; 
+    margin-bottom: 15px; 
+}
+
+.mini-card { 
+    background: white; 
+    padding: 12px; 
+    border-radius: 15px; 
+    text-align: center; 
+    border: 1px solid #eee; 
+}
+
+.mini-card span { 
+    font-size: 10px; 
+    color: #888; 
+    display: block; 
+}
+
+.cat-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; 
+    margin-bottom: 15px; 
+}
+
+.btn-cat { 
+    background: white; 
+    border: 1px solid #eee; 
+    padding: 15px 5px; 
+    border-radius: 18px; 
+    text-align: center; 
+    cursor: pointer; 
+    transition: 0.2s; 
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-cat:active {
+    background: #f0f0f0;
+}
+
+.btn-cat.active { 
+    background: var(--primary); 
+    color: white; 
+    border-color: var(--primary); 
+}
+
+.btn-cat i { 
+    display: block; 
+    font-size: 20px; 
+    margin-bottom: 5px; 
+}
+
+.btn-cat span { 
+    font-size: 11px; 
+    font-weight: bold; 
+}
+
+/* FORM */
+.form-box { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 25px; 
+    box-shadow: 0 2px 15px rgba(0,0,0,0.03); 
+}
+
+.inp-group { 
+    display: flex; 
+    align-items: center; 
+    background: #f8f9fa; 
+    border-radius: 15px; 
+    padding: 12px; 
+    margin-bottom: 12px; 
+    border: 1px solid #eee; 
+}
+
+.inp-group input { 
+    border: none; 
+    background: transparent; 
+    width: 100%; 
+    outline: none; 
+    font-size: 15px; 
+    font-weight: bold; 
+}
+
+.btn-simpan {
+    background: var(--primary); 
+    color: white; 
+    border: none; 
+    width: 100%; 
+    padding: 16px; 
+    border-radius: 15px; 
+    font-weight: bold; 
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.btn-simpan:active {
+    opacity: 0.8;
+}
+
+/* RIWAYAT */
+.page { 
+    display: none; 
+}
+
+.page.active { 
+    display: block; 
+}
+
+.section-title { 
+    background: var(--dark); 
+    color: white; 
+    padding: 10px 15px; 
+    font-size: 12px; 
+    font-weight: bold; 
+    border-radius: 10px 10px 0 0; 
+    margin-top: 20px; 
+}
+
+.hist-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: white; 
+    font-size: 12px; 
+    margin-bottom: 10px; 
+}
+
+.hist-table th { 
+    background: #f0f2f5; 
+    padding: 12px; 
+    text-align: left; 
+    border-bottom: 1px solid #ddd; 
+}
+
+.hist-table td { 
+    padding: 12px; 
+    border-bottom: 1px solid #eee; 
+}
+
+/* FILTER */
+.filter-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 6px; 
+    margin-bottom: 12px; 
+}
+
+.filter-btn { 
+    background: white; 
+    border: 1px solid #ddd; 
+    padding: 10px 3px; 
+    border-radius: 10px; 
+    font-size: 10px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    text-align: center; 
+    -webkit-tap-highlight-color: transparent;
+}
+
+.filter-btn:active {
+    background: #f0f0f0;
+}
+
+.filter-btn.active { 
+    background: var(--primary); 
+    color: white; 
+    border-color: var(--primary); 
+}
+
+/* TOTAL BOX */
+.total-box { 
+    background: white; 
+    border-radius: 18px; 
+    padding: 15px; 
+    margin: 15px 0; 
+    border: 1px solid #eee; 
+}
+
+.total-row { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 10px 0; 
+    border-bottom: 1px dashed #eee; 
+}
+
+.total-row:last-child { 
+    border-bottom: none; 
+}
+
+.total-label { 
+    font-weight: 600; 
+    color: #666; 
+    font-size: 13px; 
+}
+
+.total-value { 
+    font-weight: bold; 
+    color: var(--dark); 
+    font-size: 14px; 
+}
+
+.total-value.primary { 
+    color: var(--primary); 
+}
+
+.total-value.green { 
+    color: var(--green); 
+}
+
+/* NAVBAR */
+.navbar { 
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    background: white; 
+    display: flex; 
+    justify-content: space-around; 
+    padding: 12px 0; 
+    border-top: 1px solid #eee; 
+    z-index: 1000; 
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+}
+
+.nav-item { 
+    text-align: center; 
+    color: #bbb; 
+    cursor: pointer; 
+    flex: 1; 
+    border: none; 
+    background: none; 
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.2s;
+}
+
+.nav-item:active {
+    color: var(--primary);
+}
+
+.nav-item.active { 
+    color: var(--primary); 
+}
+
+.nav-item i { 
+    font-size: 22px; 
+    display: block; 
+    margin-bottom: 4px; 
+}
+
+.nav-item p { 
+    margin: 0; 
+    font-size: 10px; 
+    font-weight: 600; 
+}
+
+/* MODAL SALDO */
+.modal-pilih, .modal-input {
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    background: rgba(0,0,0,0.5); 
+    z-index: 9999; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.modal-content {
+    background: white; 
+    width: 300px; 
+    border-radius: 25px; 
+    padding: 25px; 
+    text-align: center; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.modal-content.wide {
+    width: 320px;
+}
+
+.modal-title {
+    color: var(--primary); 
+    margin-top: 0; 
+    margin-bottom: 20px; 
+    font-size: 18px;
+}
+
+.modal-btn {
+    width: 100%; 
+    padding: 15px; 
+    margin-bottom: 12px; 
+    background: var(--blue); 
+    color: white; 
+    border: none; 
+    border-radius: 15px; 
+    font-weight: bold; 
+    font-size: 16px; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px;
+}
+
+.modal-btn.green {
+    background: var(--green);
+}
+
+.modal-btn.batal {
+    background: #f0f0f0; 
+    color: #666; 
+    margin-top: 10px;
+}
+
+.modal-input-field {
+    width: 100%; 
+    padding: 15px; 
+    font-size: 18px; 
+    border: 2px solid var(--primary); 
+    border-radius: 15px; 
+    margin: 10px 0 20px; 
+    text-align: center; 
+    box-sizing: border-box;
+}
+
+.modal-btn-group {
+    display: flex; 
+    gap: 15px; 
+    justify-content: center;
+}
+
+.modal-btn-small {
+    flex: 1; 
+    padding: 12px; 
+    background: var(--red); 
+    color: white; 
+    border: none; 
+    border-radius: 12px; 
+    font-weight: bold; 
+    font-size: 16px; 
+    cursor: pointer;
+}
+
+.modal-btn-small.green {
+    background: var(--green);
+}
+
+        /* MENU AKUN - OPTIMASI ANDROID */
+        .menu-akun-wrap {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+            padding: 25px;
+            display: none;
+            z-index: 999999 !important;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            visibility: visible !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        .menu-akun-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .menu-item {
+            background: #f4f6f8;
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--dark);
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
+            user-select: none;
+            pointer-events: auto !important;
+            border: none;
+            font-size: 14px;
+        }
+
+        .menu-item:active {
+            background: #e0e0e0;
+            transform: scale(0.98);
+        }
+
+        .menu-item i {
+            display: block;
+            font-size: 28px;
+            margin-bottom: 8px;
+            pointer-events: none;
+        }
+
+        .menu-item.red { color: #e74c3c; }
+        .menu-item.orange { color: #f39c12; }
+
+        .menu-item.logout {
+            background: #e74c3c;
+            color: #fff;
+        }
+
+        .menu-item.logout i {
+            color: #fff;
+        }
+
+        .menu-close {
+            margin-top: 20px;
+            background: #ddd;
+            padding: 16px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--dark);
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.2s;
+            user-select: none;
+            pointer-events: auto !important;
+            border: none;
+            font-size: 16px;
+        }
+
+        .menu-close:active {
+            background: #ccc;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="page-login">
+    <div class="login-box">
+        <h2 style="color:var(--primary); margin-top:0; font-size:24px;">ALFAZA CELL</h2>
+        <select id="l-user">
+            <option value="KASIR 01">KASIR 01</option>
+            <option value="KASIR 02">KASIR 02</option>
+        </select>
+        <input type="password" id="l-pin" placeholder="PIN" inputmode="numeric">
+        <button class="btn-login" onclick="prosesLogin()">MASUK</button>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none">
+    <div class="header-v14">
+        <div class="h-col h-col-left">
+            Kasir: <b id="disp-user">...</b>
+            Shift: <b id="disp-shift">...</b>
+        </div>
+        <div class="h-col">
+            <span class="toko-name">ALFAZA CELL</span>
+            <span class="tanggal-display" id="disp-tgl-header">Selasa, 10 Mar 2026</span>
+        </div>
+        <div class="h-col h-col-right">
+            Absen: <b id="disp-login" style="color:var(--orange)">--:--</b>
+            <b id="disp-jam-jalan" style="font-size:13px">00:00:00</b>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page active">
+            <div class="grid-main-saldo">
+                <div class="card-s bg-blue"><span>Saldo Bank</span><p id="s-bank">Rp 0</p></div>
+                <div class="card-s bg-green"><span>Saldo Cash</span><p id="s-cash">Rp 0</p></div>
+            </div>
+            <div class="grid-mini">
+                <div class="mini-card"><span>Tarik</span><b id="s-tarik">0</b></div>
+                <div class="mini-card"><span>Aksesoris</span><b id="s-aks">0</b></div>
+                <div class="mini-card"><span>Admin</span><b id="s-admin" style="color:var(--orange)">0</b></div>
+            </div>
+            <div class="cat-grid">
+                <div class="btn-cat active" onclick="pilihKat('BANK', this)"><i class="fa-solid fa-university"></i><span>Bank</span></div>
+                <div class="btn-cat" onclick="pilihKat('FLIP', this)"><i class="fa-solid fa-repeat"></i><span>Flip</span></div>
+                <div class="btn-cat" onclick="pilihKat('APP PULSA', this)"><i class="fa-solid fa-mobile-button"></i><span>App</span></div>
+                <div class="btn-cat" onclick="pilihKat('DANA', this)"><i class="fa-solid fa-paper-plane"></i><span>Dana</span></div>
+                <div class="btn-cat" onclick="pilihKat('TARIK TUNAI', this)"><i class="fa-solid fa-money-bill-1"></i><span>Tarik</span></div>
+                <div class="btn-cat" onclick="pilihKat('AKSESORIS', this)"><i class="fa-solid fa-headset"></i><span>Aks</span></div>
+            </div>
+            <div class="form-box">
+                <div class="inp-group"><input type="text" id="t-nom" placeholder="Nominal" inputmode="numeric" onkeyup="fmt(this)"></div>
+                <div class="inp-group"><input type="text" id="t-adm" placeholder="Admin" inputmode="numeric" onkeyup="fmt(this)"></div>
+                <div class="inp-group"><input type="text" id="t-ket" placeholder="Keterangan"></div>
+                <button class="btn-simpan" onclick="simpanTr()">SIMPAN TRANSAKSI</button>
+            </div>
+        </div>
+
+        <!-- HISTORY PAGE -->
+        <div id="page-history" class="page">
+            <div style="display:flex; gap:8px; margin-bottom:15px;">
+                <input type="date" id="f-tgl" style="flex:1; padding:12px; border-radius:12px; border:1px solid #ddd" onchange="filterRiwayat()">
+                <input type="text" id="f-cari" placeholder="Cari..." style="flex:1; padding:12px; border-radius:12px; border:1px solid #ddd" onkeyup="filterRiwayat()">
+            </div>
+            
+            <div class="filter-grid" id="filter-transaksi">
+                <div class="filter-btn active" data-filter="all" onclick="filterKategori('all', this)">Semua</div>
+                <div class="filter-btn" data-filter="BANK" onclick="filterKategori('BANK', this)">Bank</div>
+                <div class="filter-btn" data-filter="FLIP" onclick="filterKategori('FLIP', this)">Flip</div>
+                <div class="filter-btn" data-filter="APP PULSA" onclick="filterKategori('APP PULSA', this)">App</div>
+                <div class="filter-btn" data-filter="DANA" onclick="filterKategori('DANA', this)">Dana</div>
+                <div class="filter-btn" data-filter="TARIK TUNAI" onclick="filterKategori('TARIK TUNAI', this)">Tarik</div>
+                <div class="filter-btn" data-filter="AKSESORIS" onclick="filterKategori('AKSESORIS', this)">Aks</div>
+            </div>
+            
+            <div class="section-title">RIWAYAT TRANSAKSI</div>
+            <table class="hist-table">
+                <thead><tr><th>Jam</th><th>Tipe</th><th>Nominal</th><th>Adm</th></tr></thead>
+                <tbody id="list-riwayat"></tbody>
+            </table>
+            
+            <div class="total-box">
+                <div class="total-row">
+                    <span class="total-label">Total Nominal:</span>
+                    <span class="total-value primary" id="total-nominal">Rp 0</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Total Admin:</span>
+                    <span class="total-value primary" id="total-admin">Rp 0</span>
+                </div>
+            </div>
+            
+            <div class="section-title">RIWAYAT TAMBAH SALDO</div>
+            <div class="filter-grid" id="filter-tambahsaldo">
+                <div class="filter-btn active" data-filter-ts="all" onclick="filterTambahSaldo('all', this)">Semua</div>
+                <div class="filter-btn" data-filter-ts="Bank" onclick="filterTambahSaldo('Bank', this)">Bank</div>
+                <div class="filter-btn" data-filter-ts="Cash" onclick="filterTambahSaldo('Cash', this)">Cash</div>
+            </div>
+            <table class="hist-table">
+                <thead><tr><th>Jam</th><th>Jenis</th><th>Nominal</th></tr></thead>
+                <tbody id="list-tambah-saldo"></tbody>
+            </table>
+            
+            <div class="total-box">
+                <div class="total-row">
+                    <span class="total-label">Total Tambah Bank:</span>
+                    <span class="total-value green" id="total-bank">Rp 0</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Total Tambah Cash:</span>
+                    <span class="total-value green" id="total-cash">Rp 0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- REPORT PAGE -->
+        <div id="page-report" class="page">
+            <div style="background:white; padding:20px; border-radius:25px; box-shadow:0 4px 15px rgba(0,0,0,0.05)" id="rep-area"></div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-item active" onclick="bukaPage('home', this)"><i class="fa-solid fa-home"></i><p>Beranda</p></div>
+        <div class="nav-item" onclick="bukaPage('history', this)"><i class="fa-solid fa-list-ul"></i><p>Riwayat</p></div>
+        <div class="nav-item" style="color:var(--green)" onclick="bukaMenuSaldo()"><i class="fa-solid fa-circle-plus"></i><p>+Saldo</p></div>
+        <div class="nav-item" onclick="bukaPage('report', this)"><i class="fa-solid fa-chart-pie"></i><p>Laporan</p></div>
+        <div class="nav-item" onclick="bukaMenuAkun()"><i class="fa-solid fa-user-gear"></i><p>Akun</p></div>
+    </div>
+</div>
+
+<!-- MODAL PILIH JENIS SALDO -->
+<div class="modal-pilih" id="modalPilihSaldo">
+    <div class="modal-content">
+        <h3 class="modal-title">Pilih Jenis Saldo</h3>
+        <button class="modal-btn" onclick="pilihJenisSaldo('Bank')"><i class="fa-solid fa-university"></i> Tambah Saldo Bank</button>
+        <button class="modal-btn green" onclick="pilihJenisSaldo('Cash')"><i class="fa-solid fa-money-bill-wave"></i> Tambah Saldo Cash</button>
+        <button class="modal-btn batal" onclick="tutupModalPilihSaldo()">Batal</button>
+    </div>
+</div>
+
+<!-- MODAL INPUT SALDO -->
+<div class="modal-input" id="modalTambahSaldo">
+    <div class="modal-content wide">
+        <h3 class="modal-title" id="modalTitle">Tambah Saldo Bank</h3>
+        <input type="text" class="modal-input-field" id="modalInput" placeholder="Masukkan nominal" inputmode="numeric">
+        <div class="modal-btn-group">
+            <button class="modal-btn-small" id="modalBatal">BATAL</button>
+            <button class="modal-btn-small green" id="modalOke">OKE</button>
+        </div>
+    </div>
+</div>
+
+<!-- MENU AKUN - OPTIMASI ANDROID -->
+<div id="menuAkunBaru" class="menu-akun-wrap">
+    <div class="menu-akun-title">Menu Akun</div>
+    <div class="menu-grid">
+        <div class="menu-item" data-action="backup">
+            <i class="fa-solid fa-cloud-arrow-down"></i>
+            Backup Data
+        </div>
+        <div class="menu-item" data-action="restore">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            Restore Data
+        </div>
+        <div class="menu-item" data-action="laporan">
+            <i class="fa-solid fa-chart-line"></i>
+            Grafik Laba
+        </div>
+        <div class="menu-item red" data-action="reset">
+            <i class="fa-solid fa-trash-can"></i>
+            Reset Data
+        </div>
+        <div class="menu-item orange" data-action="resetSaldo">
+            <i class="fa-solid fa-rotate-right"></i>
+            Reset Saldo
+        </div>
+        <div class="menu-item logout" data-action="logout">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            Logout
+        </div>
+    </div>
+    <div class="menu-close" data-action="close">Tutup</div>
+</div>
+
+<script>
+    // ==================== DATA INIT ====================
+    let mainDB = JSON.parse(localStorage.getItem('alfaza_v14_4')) || { 
+        "KASIR 01": { bank:0, cash:0, tarik:0, aks:0, admin:0, loginTime: "", tr:[], ts:[] },
+        "KASIR 02": { bank:0, cash:0, tarik:0, aks:0, admin:0, loginTime: "", tr:[], ts:[] }
+    };
+    let currentUser = ""; 
+    let db = null; 
+    let katAktif = 'BANK';
+    let tambahSaldoJenis = 'Bank';
+    let filterKategoriAktif = 'all';
+    let filterTambahSaldoAktif = 'all';
+
+    // ==================== LOGIN ====================
+    function prosesLogin() {
+        const u = document.getElementById('l-user').value;
+        const p = document.getElementById('l-pin').value;
+        const pins = { "KASIR 01": "1212", "KASIR 02": "2323" };
+        
+        if (pins[u] === p) {
+            currentUser = u; 
+            db = mainDB[u];
+            
+            if (!db.loginTime) {
+                db.loginTime = new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+            }
+            
+            document.getElementById('page-login').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('disp-user').innerText = currentUser;
+            document.getElementById('disp-login').innerText = db.loginTime;
+            document.getElementById('f-tgl').valueAsDate = new Date();
+            
+            const jamNow = new Date().getHours();
+            document.getElementById('disp-shift').innerText = (jamNow >= 6 && jamNow < 15) ? "Pagi" : "Malam";
+            
+            initEvents();
+            refresh();
+        } else { 
+            alert("PIN SALAH!"); 
+        }
+    }
+
+    // ==================== INIT EVENTS ====================
+    function initEvents() {
+        initEnterKeyEvents();
+        initModalEvents();
+        initMenuAkun();
+    }
+
+    function initEnterKeyEvents() {
+        const inputNominal = document.getElementById('t-nom');
+        const inputAdmin = document.getElementById('t-adm');
+        const inputKeterangan = document.getElementById('t-ket');
+        
+        if(inputNominal) {
+            inputNominal.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    inputAdmin.focus();
+                }
+            });
+        }
+        
+        if(inputAdmin) {
+            inputAdmin.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    inputKeterangan.focus();
+                }
+            });
+        }
+        
+        if(inputKeterangan) {
+            inputKeterangan.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    simpanTr();
+                }
+            });
+        }
+    }
+
+    function initModalEvents() {
+        const modalInput = document.getElementById('modalInput');
+        const btnBatal = document.getElementById('modalBatal');
+        const btnOke = document.getElementById('modalOke');
+        
+        if(modalInput) {
+            modalInput.addEventListener('keyup', function(e) {
+                let value = this.value;
+                value = formatAngka(value);
+                this.value = value;
+            });
+            
+            modalInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    prosesTambahSaldo();
+                }
+            });
+        }
+        
+        if(btnBatal) {
+            btnBatal.onclick = tutupModalTambahSaldo;
+        }
+        
+        if(btnOke) {
+            btnOke.onclick = prosesTambahSaldo;
+        }
+    }
+
+    // ==================== MENU AKUN HANDLER ====================
+    function initMenuAkun() {
+        document.querySelectorAll('.menu-item, .menu-close').forEach(function(item) {
+            // Click untuk desktop
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleMenuAction(this);
+            });
+            
+            // Touch untuk Android
+            item.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                handleMenuAction(this);
+            }, { passive: false });
+        });
+        
+        // Tutup menu jika klik di luar
+        document.addEventListener('click', function(e) {
+            var menu = document.getElementById('menuAkunBaru');
+            var menuButton = document.querySelector('.nav-item[onclick="bukaMenuAkun()"]');
+            
+            if (menu.style.display === 'block' && 
+                !menu.contains(e.target) && 
+                menuButton && !menuButton.contains(e.target)) {
+                tutupMenuAkunBaru();
+            }
+        });
+    }
+
+    function handleMenuAction(el) {
+        var action = el.getAttribute('data-action');
+        
+        if (el.classList.contains('menu-close') || action === 'close') {
+            tutupMenuAkunBaru();
+            return;
+        }
+        
+        switch(action) {
+            case 'backup': backupData(); break;
+            case 'restore': restoreData(); break;
+            case 'laporan': bukaLaporan(); break;
+            case 'reset': resetData(); break;
+            case 'resetSaldo': resetSaldo(); break;
+            case 'logout': logout(); break;
+            default: console.log('Unknown action:', action);
+        }
+    }
+
+    function bukaMenuAkun() {
+        var menu = document.getElementById('menuAkunBaru');
+        menu.style.display = 'block';
+        menu.style.visibility = 'visible';
+        menu.style.opacity = '1';
+        menu.style.zIndex = '999999';
+        void menu.offsetHeight; // Force reflow
+    }
+
+    function tutupMenuAkunBaru() {
+        document.getElementById('menuAkunBaru').style.display = 'none';
+    }
+
+    // ==================== SALDO MODAL ====================
+    function bukaMenuSaldo() {
+        tutupMenuAkunBaru();
+        document.getElementById('modalPilihSaldo').style.display = 'flex';
+    }
+
+    function tutupModalPilihSaldo() {
+        document.getElementById('modalPilihSaldo').style.display = 'none';
+    }
+
+    function pilihJenisSaldo(jenis) {
+        tambahSaldoJenis = jenis;
+        document.getElementById('modalTitle').innerText = jenis === 'Bank' ? 'Tambah Saldo Bank' : 'Tambah Saldo Cash';
+        document.getElementById('modalInput').value = '';
+        tutupModalPilihSaldo();
+        document.getElementById('modalTambahSaldo').style.display = 'flex';
+        document.getElementById('modalInput').focus();
+    }
+
+    function prosesTambahSaldo() {
+        const modalInput = document.getElementById('modalInput');
+        const rawValue = modalInput.value.replace(/\./g, '');
+        
+        if(rawValue) {
+            const nom = toInt(rawValue);
+            const now = new Date();
+            
+            if(tambahSaldoJenis === 'Bank') db.bank += nom;
+            else db.cash += nom;
+            
+            db.ts.unshift({ 
+                tgl: now.toISOString().split('T')[0], 
+                jam: now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}), 
+                jenis: tambahSaldoJenis, 
+                nom 
+            });
+            
+            refresh();
+        }
+        
+        tutupModalTambahSaldo();
+    }
+
+    function tutupModalTambahSaldo() {
+        document.getElementById('modalTambahSaldo').style.display = 'none';
+    }
+
+    // ==================== UTILITY FUNCTIONS ====================
+    setInterval(() => { 
+        const d = new Date();
+        document.getElementById('disp-jam-jalan').innerText = d.toLocaleTimeString('id-ID');
+        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+        document.getElementById('disp-tgl-header').innerText = d.toLocaleDateString('id-ID', options);
+    }, 1000);
+
+    function formatAngka(angka) {
+        return angka.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    function fmt(el) { 
+        let v = el.value.replace(/\D/g,''); 
+        el.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; 
+    }
+    
+    function toInt(v) { 
+        return parseInt(v.toString().replace(/\D/g,'')) || 0; 
+    }
+    
+    function fmtN(v) { 
+        return new Intl.NumberFormat('id-ID').format(v); 
+    }
+
+    function bukaPage(pg, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('page-' + pg).classList.add('active');
+        if (el) el.classList.add('active');
+        
+        if(pg === 'history') filterRiwayat();
+        if(pg === 'report') hitungLaporan();
+        
+        tutupMenuAkunBaru();
+        tutupModalPilihSaldo();
+        tutupModalTambahSaldo();
+    }
+
+    function bukaLaporan() {
+        const reportNavItem = document.querySelector('.nav-item[onclick*="bukaPage(\'report\')"]');
+        bukaPage('report', reportNavItem);
+    }
+
+    function pilihKat(k, el) {
+        katAktif = k;
+        document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+        function simpanTr() {
+        const nom = toInt(document.getElementById('t-nom').value);
+        const adm = toInt(document.getElementById('t-adm').value);
+        const ket = document.getElementById('t-ket').value;
+        
+        if(!nom) {
+            alert('Masukkan nominal terlebih dahulu!');
+            document.getElementById('t-nom').focus();
+            return;
+        }
+        
+        const now = new Date();
+        const tgl = now.toISOString().split('T')[0];
+        const jam = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+        
+        if(katAktif === 'TARIK TUNAI') { 
+            db.cash -= nom; 
+            db.tarik += nom; 
+        }
+        else if(katAktif === 'AKSESORIS') { 
+            db.cash += nom; 
+            db.aks += nom; 
+        }
+        else { 
+            db.bank -= nom; 
+            db.cash += nom; 
+        }
+        
+        db.admin += adm;
+        db.tr.unshift({ tgl, jam, kat: katAktif, nom, adm, ket });
+        
+        refresh();
+        
+        document.getElementById('t-nom').value = ""; 
+        document.getElementById('t-adm').value = ""; 
+        document.getElementById('t-ket').value = "";
+        document.getElementById('t-nom').focus();
+    }
+
+    function filterKategori(kategori, el) {
+        filterKategoriAktif = kategori;
+        document.querySelectorAll('#filter-transaksi .filter-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        filterRiwayat();
+    }
+
+    function filterTambahSaldo(jenis, el) {
+        filterTambahSaldoAktif = jenis;
+        document.querySelectorAll('#filter-tambahsaldo .filter-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        filterRiwayat();
+    }
+
+    function filterRiwayat() {
+        const tglInp = document.getElementById('f-tgl').value;
+        const cari = document.getElementById('f-cari').value.toLowerCase();
+        let hTr = "", hTs = "";
+        
+        let filteredTr = db.tr.filter(i => i.tgl === tglInp);
+        if (filterKategoriAktif !== 'all') {
+            filteredTr = filteredTr.filter(i => i.kat === filterKategoriAktif);
+        }
+        filteredTr = filteredTr.filter(i => 
+            i.kat.toLowerCase().includes(cari) || 
+            (i.ket && i.ket.toLowerCase().includes(cari))
+        );
+        
+        let totalNominal = 0, totalAdmin = 0;
+        filteredTr.forEach(i => {
+            hTr += `<tr><td>${i.jam}</td><td>${i.kat}</td><td>Rp ${fmtN(i.nom)}</td><td>Rp ${fmtN(i.adm)}</td></tr>`;
+            totalNominal += i.nom;
+            totalAdmin += i.adm;
+        });
+        
+        document.getElementById('list-riwayat').innerHTML = hTr || "<tr><td colspan='4' style='text-align:center'>Tidak ada transaksi</td></tr>";
+        document.getElementById('total-nominal').innerText = 'Rp ' + fmtN(totalNominal);
+        document.getElementById('total-admin').innerText = 'Rp ' + fmtN(totalAdmin);
+        
+        let filteredTs = db.ts.filter(i => i.tgl === tglInp);
+        if (filterTambahSaldoAktif !== 'all') {
+            filteredTs = filteredTs.filter(i => i.jenis === filterTambahSaldoAktif);
+        }
+        
+        let totalBank = 0, totalCash = 0;
+        filteredTs.forEach(i => {
+            hTs += `<tr><td>${i.jam}</td><td>${i.jenis}</td><td>Rp ${fmtN(i.nom)}</td></tr>`;
+            if (i.jenis === 'Bank') totalBank += i.nom;
+            if (i.jenis === 'Cash') totalCash += i.nom;
+        });
+        
+        document.getElementById('list-tambah-saldo').innerHTML = hTs || "<tr><td colspan='3' style='text-align:center'>Tidak ada tambah saldo</td></tr>";
+        document.getElementById('total-bank').innerText = 'Rp ' + fmtN(totalBank);
+        document.getElementById('total-cash').innerText = 'Rp ' + fmtN(totalCash);
+    }
+
+    function hitungLaporan() {
+        const tgl = document.getElementById('f-tgl').value;
+        const fTr = db.tr.filter(x => x.tgl === tgl);
+        const fTs = db.ts.filter(x => x.tgl === tgl);
+        
+        const getSum = (k) => fTr.filter(x => x.kat === k).reduce((a,b) => a + b.nom, 0);
+        
+        let sBank = getSum('BANK');
+        let sFlip = getSum('FLIP');
+        let sDana = getSum('DANA');
+        let sApp = getSum('APP PULSA');
+        let sAks = getSum('AKSESORIS');
+        let sTarik = getSum('TARIK TUNAI');
+        
+        let totalPenjualan = sBank + sFlip + sDana + sApp;
+        
+        let tModCash = fTs.filter(x => x.jenis === 'Cash').reduce((a,b) => a + b.nom, 0);
+        let tModBank = fTs.filter(x => x.jenis === 'Bank').reduce((a,b) => a + b.nom, 0);
+        
+        let saldoCashAwal = db.cash - tModCash + sTarik - sAks;
+        let sisaCashToko = db.cash;
+        let totalAdmin = fTr.reduce((a,b) => a + b.adm, 0);
+        let totalAksesoris = sAks;
+        let sisaCashSeluruhnya = db.cash + totalAdmin + totalAksesoris;
+
+        // Simpan data laporan ke variabel global untuk digunakan di fungsi share
+        window.laporanData = {
+            tgl: tgl,
+            tModBank: tModBank,
+            saldoCashAwal: saldoCashAwal,
+            sisaCashSekarang: db.cash,
+            sBank: sBank,
+            sFlip: sFlip,
+            sDana: sDana,
+            sApp: sApp,
+            totalPenjualan: totalPenjualan,
+            sTarik: sTarik,
+            sisaCashToko: sisaCashToko,
+            totalAdmin: totalAdmin,
+            totalAksesoris: totalAksesoris,
+            sisaCashSeluruhnya: sisaCashSeluruhnya
+        };
+
+        document.getElementById('rep-area').innerHTML = `
+            <div style="text-align:center; padding: 10px 0 20px;">
+                <h2 style="margin:0; color:#333;">LAPORAN HARIAN</h2>
+                <small style="color:#888">${tgl}</small>
+            </div>
+
+            <div style="background:#f0f7ff; padding:15px; border-radius:15px; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; padding:5px 0;">
+                    <span>Total Saldo Bank (Awal+Tambah)</span>
+                    <b style="color:var(--primary)">Rp ${fmtN(tModBank)}</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:5px 0;">
+                    <span>Saldo Cash Awal</span>
+                    <b style="color:var(--green)">Rp ${fmtN(saldoCashAwal)}</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:5px 0; border-top:1px dashed #ccc;">
+                    <span>Sisa Saldo Sekarang</span>
+                    <b>Rp ${fmtN(db.cash)}</b>
+                </div>
+            </div>
+
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:15px;">
+                <h3 style="margin:0 0 10px; font-size:14px;">PENJUALAN HARI INI</h3>
+                ${['Bank', 'Flip', 'Dana', 'App Pulsa'].map((item, idx) => `
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0f0f0;">
+                        <span>Penjualan ${item}</span>
+                        <b>Rp ${fmtN([sBank, sFlip, sDana, sApp][idx])}</b>
+                    </div>
+                `).join('')}
+                <div style="display:flex; justify-content:space-between; padding:10px 0; background:#f8f9fa; margin:5px -15px -15px; padding:15px;">
+                    <span style="font-weight:bold;">TOTAL PENJUALAN =</span>
+                    <b style="color:var(--primary);">Rp ${fmtN(totalPenjualan)}</b>
+                </div>
+            </div>
+
+            <div style="background:#fff3f3; padding:15px; border-radius:15px; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="font-weight:bold; color:#e74c3c;">POTONGAN TARIK TUNAI (-)</span>
+                    <b style="color:#e74c3c;">Rp ${fmtN(sTarik)}</b>
+                </div>
+            </div>
+
+            <div style="background:#e8f5e9; padding:18px; border-radius:15px; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="font-weight:bold; color:#27ae60;">SISA CASH TOKO</span>
+                    <h3 style="margin:0; color:#27ae60;">Rp ${fmtN(sisaCashToko)}</h3>
+                </div>
+            </div>
+
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f0f0f0;">
+                    <span>Tambah Total Admin</span>
+                    <b style="color:var(--orange);">Rp ${fmtN(totalAdmin)}</b>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:8px 0;">
+                    <span>Tambah Total Aksesoris</span>
+                    <b style="color:var(--blue);">Rp ${fmtN(totalAksesoris)}</b>
+                </div>
+            </div>
+
+            <div style="background:linear-gradient(135deg, #667eea, #764ba2); padding:20px; border-radius:15px; margin-bottom:20px; color:white;">
+                <div style="display:flex; justify-content:space-between;">
+                    <span style="font-weight:bold;">SISA CASH SELURUHNYA</span>
+                    <h2 style="margin:0;">Rp ${fmtN(sisaCashSeluruhnya)}</h2>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px;">
+                    <span>Cash: Rp ${fmtN(sisaCashToko)}</span>
+                    <span>+Admin: Rp ${fmtN(totalAdmin)}</span>
+                    <span>+Aks: Rp ${fmtN(totalAksesoris)}</span>
+                </div>
+            </div>
+
+            <!-- TOMBOL SHARE ANDROID -->
+            <button onclick="shareLaporan()" style="width:100%; background:#4CAF50; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px;">
+                <i class="fa-solid fa-share-alt"></i> SHARE LAPORAN
+            </button>
+            
+            <button onclick="cetakLaporan()" style="width:100%; background:#ef5350; color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:10px;">
+                <i class="fa-solid fa-print"></i> CETAK / PDF
+            </button>
+        `;
+    }
+
+    // Fungsi untuk Share Laporan (Android Share)
+    function shareLaporan() {
+        if (!window.laporanData) {
+            alert('Tidak ada data laporan');
+            return;
+        }
+        
+        const d = window.laporanData;
+        
+        // Buat teks laporan
+        const teksLaporan = 
+`LAPORAN HARIAN ALFAZA CELL
+Tanggal: ${d.tgl}
+
+SALDO AWAL:
+• Total Saldo Bank (Awal+Tambah): Rp ${fmtN(d.tModBank)}
+• Saldo Cash Awal: Rp ${fmtN(d.saldoCashAwal)}
+• Sisa Saldo Sekarang: Rp ${fmtN(d.sisaCashSekarang)}
+
+PENJUALAN HARI INI:
+• Penjualan Bank: Rp ${fmtN(d.sBank)}
+• Penjualan Flip: Rp ${fmtN(d.sFlip)}
+• Penjualan Dana: Rp ${fmtN(d.sDana)}
+• Penjualan App Pulsa: Rp ${fmtN(d.sApp)}
+• TOTAL PENJUALAN: Rp ${fmtN(d.totalPenjualan)}
+
+• POTONGAN TARIK TUNAI: -Rp ${fmtN(d.sTarik)}
+
+• SISA CASH TOKO: Rp ${fmtN(d.sisaCashToko)}
+
+TAMBAHAN:
+• Total Admin: Rp ${fmtN(d.totalAdmin)}
+• Total Aksesoris: Rp ${fmtN(d.totalAksesoris)}
+
+• SISA CASH SELURUHNYA: Rp ${fmtN(d.sisaCashSeluruhnya)}
+(Rincian: Cash Rp ${fmtN(d.sisaCashToko)} + Admin Rp ${fmtN(d.totalAdmin)} + Aks Rp ${fmtN(d.totalAksesoris)})
+
+-- Dibuat oleh ALFAZA CELL APP --`;
+
+        // Cek apakah WebView mendukung Web Share API
+        if (navigator.share) {
+            navigator.share({
+                title: 'Laporan Harian Alfaza Cell',
+                text: teksLaporan,
+                url: window.location.href
+            })
+            .catch((error) => {
+                console.log('Gagal share:', error);
+                // Fallback: copy ke clipboard
+                copyToClipboard(teksLaporan);
+            });
+        } else {
+            // Fallback untuk browser yang tidak support Web Share
+            copyToClipboard(teksLaporan);
+        }
+    }
+
+    // Fungsi untuk Copy ke Clipboard
+    function copyToClipboard(text) {
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        
+        try {
+            document.execCommand('copy');
+            alert('Teks laporan berhasil disalin! Bisa paste di WhatsApp, Email, dll.');
+        } catch (err) {
+            alert('Gagal menyalin teks');
+        }
+        
+        document.body.removeChild(textarea);
+    }
+
+    // Fungsi untuk Cetak/PDF (tetap pakai window.print)
+    function cetakLaporan() {
+        window.print();
+    }
+
+    function refresh() {
+        if(!db) return;
+        document.getElementById('s-bank').innerText = "Rp " + fmtN(db.bank);
+        document.getElementById('s-cash').innerText = "Rp " + fmtN(db.cash);
+        document.getElementById('s-tarik').innerText = fmtN(db.tarik);
+        document.getElementById('s-aks').innerText = fmtN(db.aks);
+        document.getElementById('s-admin').innerText = fmtN(db.admin);
+        localStorage.setItem('alfaza_v14_4', JSON.stringify(mainDB));
+    }
+
+    function backupData(){
+        const data = localStorage.getItem('alfaza_v14_4') || JSON.stringify(mainDB);
+        const blob = new Blob([data], {type:'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'backup_alfaza.json';
+        a.click();
+        tutupMenuAkunBaru();
+    }
+
+    function restoreData(){
+        const input = document.createElement('input');
+        input.type='file';
+        input.accept='application/json';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                localStorage.setItem('alfaza_v14_4', reader.result);
+                alert('Data berhasil direstore');
+                location.reload();
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+        tutupMenuAkunBaru();
+    }
+
+    function resetSaldo(){
+        if(confirm('Reset semua saldo menjadi 0?')){
+            Object.keys(mainDB).forEach(k => {
+                mainDB[k].bank = 0;
+                mainDB[k].cash = 0;
+                mainDB[k].tarik = 0;
+                mainDB[k].aks = 0;
+                mainDB[k].admin = 0;
+            });
+            localStorage.setItem('alfaza_v14_4', JSON.stringify(mainDB));
+            refresh();
+            alert('Saldo berhasil direset');
+            tutupMenuAkunBaru();
+        }
+    }
+
+    function resetData(){
+        if(confirm('Hapus semua data?')){
+            localStorage.clear();
+            location.reload();
+        }
+        tutupMenuAkunBaru();
+    }
+
+    function logout() {
+        if(confirm('Anda yakin ingin logout?')){
+            location.reload();
+        }
+    }
+</script>
+
+</body>
+</html>
