@@ -908,7 +908,7 @@ function simpanTr() {
     const jam = now.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
 
     if(katAktif === 'TARIK TUNAI') { db.cash -= nom; db.tarik += nom; }
-    else if(katAktif === 'AKSESORIS') { db.cash += nom; db.aks += nom; }
+    else if(katAktif === 'AKSESORIS') { db.aks += nom; }
     else { db.bank -= nom; db.cash += nom; }
 
     db.admin += adm;
@@ -1051,7 +1051,7 @@ function hitungLaporan() {
     let tModBank = fTs.filter(x => x.jenis === 'Bank').reduce((a,b) => a + b.nom, 0);
 
     let totalAdmin = fTr.reduce((a,b) => a + b.adm, 0);
-    let sisaCashSeluruhnya = db.cash + totalAdmin + sAks;
+    let sisaCashSeluruhnya = db.cash + sAks + totalAdmin;
 
     document.getElementById('rep-area').innerHTML = `
         <div class="report-card">
@@ -1087,7 +1087,7 @@ function hitungLaporan() {
                     <span class="report-total-value">Rp ${fmtN(sisaCashSeluruhnya)}</span>
                 </div>
                 <div class="report-footer">
-                    Cash: Rp ${fmtN(db.cash)} + Admin: Rp ${fmtN(totalAdmin)} + Aks: Rp ${fmtN(sAks)}
+                    Cash: Rp ${fmtN(db.cash)} + Aks: Rp ${fmtN(sAks)} + Admin: Rp ${fmtN(totalAdmin)}
                 </div>
             </div>
         </div>
@@ -1490,7 +1490,7 @@ function buildLaporanData() {
     let tModCash = fTs.filter(x => x.jenis === 'Cash').reduce((a,b) => a + b.nom, 0);
     let tModBank = fTs.filter(x => x.jenis === 'Bank').reduce((a,b) => a + b.nom, 0);
     let totalAdmin = fTr.reduce((a,b) => a + b.adm, 0);
-    let sisaCashSeluruhnya = db.cash + totalAdmin + sAks;
+    let sisaCashSeluruhnya = db.cash + sAks + totalAdmin;
 
     let tglFmt = tgl;
     try {
